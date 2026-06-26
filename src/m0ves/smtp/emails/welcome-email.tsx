@@ -12,7 +12,7 @@ import {
   Text,
 } from 'react-email'
 import BaseLayout from './components/base-layout'
-import Article from './components/article'
+import Article from './components/Article'
 
 export default function WelcomeEmail({
   socials,
