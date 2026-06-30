@@ -4,16 +4,23 @@ import { getPayload } from 'payload'
 import React from 'react'
 import { fileURLToPath } from 'url'
 import config from '@/payload.config'
+import { GameSessionMenu } from '@/components/GameSessionMenu'
 
 export default async function PlayHomePage() {
-  // const headers = await getHeaders()
-  // const payloadConfig = await config
-  // const payload = await getPayload({ config: payloadConfig })
-  // const { user } = await payload.auth({ headers })
+  const headers = await getHeaders()
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+  const { user } = await payload.auth({ headers })
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 
   // Pick a quiz and and start a game if you have permissions
   //
 
-  return <></>
+  return (
+    <>
+      <div className="max-w-6xl mx-auto">
+        <GameSessionMenu />
+      </div>
+    </>
+  )
 }

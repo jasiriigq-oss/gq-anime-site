@@ -23,7 +23,7 @@ export const ImportExportPlugin: Plugin = async (inConfig: Config): Promise<Conf
     })
     .map((c) => ({ slug: c.slug as CollectionSlug }))
 
-  console.log('Import Export Collections', collections, inConfig.collections)
+  //console.log('Import Export Collections', collections, inConfig.collections)
   return importExportPlugin({
     collections,
   })(inConfig)

@@ -72,6 +72,7 @@ export interface Config {
     quizzes: Quiz;
     questions: Question;
     'game-session': GameSession;
+    'game-session-player': GameSessionPlayer;
     'navigation-link': NavigationLink;
     page: Page;
     search: Search;
@@ -87,6 +88,7 @@ export interface Config {
     quizzes: QuizzesSelect<false> | QuizzesSelect<true>;
     questions: QuestionsSelect<false> | QuestionsSelect<true>;
     'game-session': GameSessionSelect<false> | GameSessionSelect<true>;
+    'game-session-player': GameSessionPlayerSelect<false> | GameSessionPlayerSelect<true>;
     'navigation-link': NavigationLinkSelect<false> | NavigationLinkSelect<true>;
     page: PageSelect<false> | PageSelect<true>;
     search: SearchSelect<false> | SearchSelect<true>;
@@ -141,6 +143,7 @@ export interface UserAuthOperations {
  */
 export interface User {
   id: number;
+  role?: ('admin' | 'user') | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -187,6 +190,8 @@ export interface Media {
 export interface Quiz {
   id: number;
   name: string;
+  cover?: (number | null) | Media;
+  description?: string | null;
   questions?:
     | {
         question: number | Question;
@@ -210,11 +215,8 @@ export interface Question {
   hintImage?: (number | null) | Media;
   hintVideo?: (number | null) | Media;
   hintSound?: (number | null) | Media;
-  answer: {
+  answers: {
     text: string;
-    image: number | Media;
-    video?: (number | null) | Media;
-    audio?: (number | null) | Media;
     isCorrect: boolean;
     id?: string | null;
   }[];
@@ -227,6 +229,12 @@ export interface Question {
  */
 export interface GameSession {
   id: number;
+  owners?:
+    | {
+        user?: (number | null) | User;
+        id?: string | null;
+      }[]
+    | null;
   name: string;
   playerCount?: number | null;
   round?: number | null;
@@ -234,7 +242,7 @@ export interface GameSession {
   startTime?: string | null;
   endTime?: string | null;
   quiz: number | Quiz;
-  players_info_json?:
+  players?:
     | {
         [k: string]: unknown;
       }
@@ -243,6 +251,31 @@ export interface GameSession {
     | number
     | boolean
     | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "game-session-player".
+ */
+export interface GameSessionPlayer {
+  id: number;
+  session?: (number | null) | GameSession;
+  name: string;
+  picture: string;
+  answers:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  score: number;
+  eliminated: boolean;
+  index: number;
+  ready?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -361,6 +394,10 @@ export interface PayloadLockedDocument {
         value: number | GameSession;
       } | null)
     | ({
+        relationTo: 'game-session-player';
+        value: number | GameSessionPlayer;
+      } | null)
+    | ({
         relationTo: 'navigation-link';
         value: number | NavigationLink;
       } | null)
@@ -419,6 +456,7 @@ export interface PayloadMigration {
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -461,6 +499,8 @@ export interface MediaSelect<T extends boolean = true> {
  */
 export interface QuizzesSelect<T extends boolean = true> {
   name?: T;
+  cover?: T;
+  description?: T;
   questions?:
     | T
     | {
@@ -483,13 +523,10 @@ export interface QuestionsSelect<T extends boolean = true> {
   hintImage?: T;
   hintVideo?: T;
   hintSound?: T;
-  answer?:
+  answers?:
     | T
     | {
         text?: T;
-        image?: T;
-        video?: T;
-        audio?: T;
         isCorrect?: T;
         id?: T;
       };
@@ -501,6 +538,12 @@ export interface QuestionsSelect<T extends boolean = true> {
  * via the `definition` "game-session_select".
  */
 export interface GameSessionSelect<T extends boolean = true> {
+  owners?:
+    | T
+    | {
+        user?: T;
+        id?: T;
+      };
   name?: T;
   playerCount?: T;
   round?: T;
@@ -508,7 +551,23 @@ export interface GameSessionSelect<T extends boolean = true> {
   startTime?: T;
   endTime?: T;
   quiz?: T;
-  players_info_json?: T;
+  players?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "game-session-player_select".
+ */
+export interface GameSessionPlayerSelect<T extends boolean = true> {
+  session?: T;
+  name?: T;
+  picture?: T;
+  answers?: T;
+  score?: T;
+  eliminated?: T;
+  index?: T;
+  ready?: T;
   updatedAt?: T;
   createdAt?: T;
 }

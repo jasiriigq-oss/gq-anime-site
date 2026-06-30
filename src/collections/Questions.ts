@@ -59,37 +59,18 @@ export const Questions: CollectionConfig = {
       relationTo: 'media',
     },
     {
-      name: 'answer',
+      name: 'answers',
+      label: 'Answers',
       type: 'array',
       required: true,
       fields: [
         {
           name: 'text',
-          label: 'Question Text',
+          label: 'Answer Text',
           type: 'text',
           required: true,
         },
-        {
-          name: 'image',
-          label: 'Image',
-          type: 'upload',
-          relationTo: 'media',
-          required: true,
-        },
-        {
-          name: 'video',
-          label: 'Video',
-          type: 'upload',
-          relationTo: 'media',
-          required: false,
-        },
-        {
-          name: 'audio',
-          label: 'Audio',
-          type: 'upload',
-          relationTo: 'media',
-          required: false,
-        },
+
         {
           name: 'isCorrect',
           label: 'Is Correct',

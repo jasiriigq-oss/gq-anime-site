@@ -23,7 +23,7 @@ export const NestedDOCPlugin: Plugin = async (inConfig: Config): Promise<Config>
       return c.fields.some((f) => (f as any)?.name === INCLUDE_NESTED_DOC_NAME)
     })
     .map((c) => c.slug as CollectionSlug)
-  console.log('Nested DOC Collections', collections)
+  // console.log('Nested DOC Collections', collections)
 
   return nestedDocsPlugin({
     collections,

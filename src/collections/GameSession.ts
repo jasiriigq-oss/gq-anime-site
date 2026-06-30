@@ -7,6 +7,18 @@ export const GameSessions: CollectionConfig = {
   },
   fields: [
     {
+      name: 'owners',
+      type: 'array',
+      fields: [
+        {
+          name: 'user',
+          type: 'relationship',
+          relationTo: 'users',
+        },
+      ],
+      defaultValue: [],
+    },
+    {
       name: 'name',
       type: 'text',
       required: true,
@@ -55,40 +67,9 @@ export const GameSessions: CollectionConfig = {
     },
 
     {
-      name: 'players_info_json',
+      name: 'players',
       type: 'json',
-      defaultValue: {
-        players: [],
-      },
+      defaultValue: [],
     },
   ],
-}
-
-export interface GameSession_Answer {
-  value: string
-}
-
-export interface GameSession_Player {
-  id: string
-  name: string
-  player_picture: number
-  answers: GameSession_Answer[]
-  score: number
-  eliminated: boolean
-}
-
-export interface GameSession_PlayerInfo_JSON {
-  players: GameSession_Player[]
-}
-
-export function createNewGameSessionPlayer(player: Partial<GameSession_Player>) {
-  return {
-    id: '',
-    name: '(unset)',
-    player_picture: 1,
-    answers: [],
-    score: 0,
-    eliminated: false,
-    ...player,
-  } as GameSession_Player
 }

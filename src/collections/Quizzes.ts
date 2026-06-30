@@ -12,6 +12,15 @@ export const Quizzes: CollectionConfig = {
       required: true,
     },
     {
+      name: 'cover',
+      type: 'relationship',
+      relationTo: 'media',
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+    },
+    {
       name: 'questions',
       type: 'array',
       fields: [

@@ -20,7 +20,7 @@ export default async function PageRenderer({ params, searchParams }: RouteProps<
   const { user } = await payload.auth({ headers })
   const slug = (await params).slug
   const pageQuery = await getPageBySlug('/' + slug)
-  console.log({ slug })
+  // console.log({ slug })
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 
   if (pageQuery.totalDocs == 0) {

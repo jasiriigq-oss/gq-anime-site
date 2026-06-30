@@ -1,3 +1,4 @@
+'use server'
 import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
@@ -5,6 +6,7 @@ import React from 'react'
 import { fileURLToPath } from 'url'
 
 import config from '@/payload.config'
+import RealTimeFeed from '@/components/RealTimeFeed'
 
 export default async function PlayPage() {
   const headers = await getHeaders()
@@ -13,5 +15,9 @@ export default async function PlayPage() {
   const { user } = await payload.auth({ headers })
   const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
 
-  return <></>
+  return (
+    <>
+      <RealTimeFeed game_server_url={process.env.GAME_SERVER_URL || ''} />
+    </>
+  )
 }

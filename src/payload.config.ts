@@ -18,6 +18,7 @@ import { StripePlugin } from './m0ves/plugins/stripe/plugin'
 import { NavigationPlugin } from './m0ves/plugins/navigation/plugin'
 import { Questions } from './collections/Questions'
 import { GameSessions } from './collections/GameSession'
+import { GameSessionPlayers } from './collections/GameSessionPlayer'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -58,7 +59,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  collections: [Users, Media, Quizzes, Questions, GameSessions],
+  collections: [Users, Media, Quizzes, Questions, GameSessions, GameSessionPlayers],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
