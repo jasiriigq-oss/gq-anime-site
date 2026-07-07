@@ -1,8 +1,11 @@
 FROM node:22-alpine AS base
 WORKDIR /app/game-server
 
-COPY game-server/package*.json ./
-RUN npm ci
+# Install git so npm can resolve git-based dependencies
+RUN apk update && apk add --no-cache git
+
+COPY game-server/package.json ./
+RUN npm i
 
 COPY game-server/ ./
 RUN npm run build
