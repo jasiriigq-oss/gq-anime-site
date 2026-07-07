@@ -26,9 +26,9 @@ const server = defineServer({
    *
    */
   routes: createRouter({
-    api_hello: createEndpoint('/api/hello', { method: 'GET' }, async (ctx) => {
-      return { message: 'Hello World' }
-    }),
+    // api_hello: createEndpoint('/api/hello', { method: 'GET' }, async (ctx) => {
+    //   return { message: 'Hello World' }
+    // }),
   }),
 
   /**
@@ -36,9 +36,9 @@ const server = defineServer({
    * Read more: https://expressjs.com/en/starter/basic-routing.html
    */
   express: (app) => {
-    app.get('/hi', (req, res) => {
-      res.send("It's time to kick ass and chew bubblegum!")
-    })
+    // app.get('/hi', (req, res) => {
+    //   res.send("It's time to kick ass and chew bubblegum!")
+    // })
     /**
      * Use @colyseus/monitor
      * It is recommended to protect this route with a password

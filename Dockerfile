@@ -11,7 +11,7 @@ RUN bun i
 
 COPY game-server/ ./
 
-ENV NODE_ENV=production
+# ENV NODE_ENV=production
 
 EXPOSE 2567
 ENV PORT=2567
