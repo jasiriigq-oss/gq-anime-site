@@ -3,13 +3,16 @@ import { Media } from '@/payload-types'
 export function createPlayerLink(sessionId: number, playerId: number) {
   const params = new URLSearchParams({
     mode: 'player',
-    player: `${playerId}`,
+    playerId: `${playerId}`,
   })
   return `${window.location.origin}/play/${sessionId}?${params.toString()}`
 }
 
 export function createAdminLink(sessionId: number, playerId: number) {
-  return `${window.location.origin}/${sessionId}${playerId}`
+  const params = new URLSearchParams({
+    mode: 'admin',
+  })
+  return `${window.location.origin}/play/${sessionId}?${params.toString()}`
 }
 
 export function createSpectatorLink(sessionId: number) {

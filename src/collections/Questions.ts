@@ -20,6 +20,10 @@ export const Questions: CollectionConfig = {
           value: 'image',
         },
         {
+          label: 'Text',
+          value: 'text',
+        },
+        {
           label: 'Video',
           value: 'video',
         },

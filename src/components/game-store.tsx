@@ -3,13 +3,9 @@ import { create, createStore, useStore } from 'zustand'
 import { createContext, useContext, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 
-export interface GameState {
-}
+export interface GameState {}
 
-export const createGameStore = () =>
-  createStore<GameState>()((set, get) => ({
-    
-  }))
+export const createGameStore = () => createStore<GameState>()((set, get) => ({}))
 
 export type GameStoreApi = ReturnType<typeof createGameStore>
 

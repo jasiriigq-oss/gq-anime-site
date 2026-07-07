@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "noEmitOnError": false,
+    "paths": {
+      "@webserver/*": ["../src/*"]
+    },
+    "outDir": "build",
+    "target": "ESNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "allowJs": true,
+    "strictNullChecks": false,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": false
+  },
+  "include": ["src", "test", "../src/**/*.ts"]
+}

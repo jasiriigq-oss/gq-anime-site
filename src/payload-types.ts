@@ -208,7 +208,7 @@ export interface Quiz {
 export interface Question {
   id: number;
   name?: string | null;
-  questionType: 'image' | 'video' | 'audio';
+  questionType: 'image' | 'text' | 'video' | 'audio';
   questionText: string;
   timeLimit: number;
   hintText?: string | null;

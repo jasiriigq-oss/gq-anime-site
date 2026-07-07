@@ -19,7 +19,6 @@ export const GameSessionMenu: React.FC<GameSessionMenuProps> = ({}: GameSessionM
   return (
     <div className=" flex flex-col gap-4">
       <MySessionsTable updateNumber={state} />
-
       <ContentWell className="flex justify-center">
         <CreateGameSessionForm refresh={refresh} />
       </ContentWell>

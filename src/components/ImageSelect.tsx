@@ -20,6 +20,7 @@ export const ImageSelect: React.FC<ImageSelectProps> = ({
   return (
     <>
       <div className="w-full flex gap-3 justify-center flex-wrap">
+        <input type="hidden" name={itemName} value={playerIconOptions[selectIndex].image} />
         {playerIconOptions.map((o, i) => {
           return (
             <div className="relative" key={i}>

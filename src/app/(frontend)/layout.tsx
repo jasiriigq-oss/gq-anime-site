@@ -4,7 +4,6 @@ import { CopyrightFooter, FooterNavigation } from '@/m0ves/components/Footers'
 import DefaultNavigation from '@/m0ves/plugins/navigation/DefaultNavigation'
 import { getNavigationData } from '@/m0ves/plugins/navigation/operations'
 import { getSiteIdentityData } from '@/m0ves/plugins/site-identity/operations'
-import { GameStoreProvider } from '@/components/game-store'
 
 export default async function RootLayout(props: { children: React.ReactNode }) {
   const { children } = props
@@ -14,11 +13,9 @@ export default async function RootLayout(props: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="m0ves">
       <body>
-        <GameStoreProvider>
-          <DefaultNavigation navigation={navigation} id={id} />
-          <main className="mt-20">{children}</main>
-          <FooterNavigation />
-        </GameStoreProvider>
+        <DefaultNavigation navigation={navigation} id={id} />
+        <main className="mt-20">{children}</main>
+        <FooterNavigation />
         <CopyrightFooter />
       </body>
     </html>

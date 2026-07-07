@@ -8,6 +8,8 @@ import { GameSession, GameSessionPlayer, Quiz, User } from '@/payload-types'
 import { StandardSiteResponse } from '@/m0ves/lib/StandardSiteResponse'
 import { fa } from 'zod/v4/locales'
 import { Nullable } from '@/m0ves/lib/Nullable'
+import { Client } from '@colyseus/sdk'
+import { GameRoom } from 'game-server/src/rooms/GameRoom'
 
 export async function createGameSession(sessionData: Partial<GameSession>, quizId: number) {
   const headers = await getHeaders()
@@ -26,6 +28,8 @@ export async function createGameSession(sessionData: Partial<GameSession>, quizI
       hint_http: 500,
     } as StandardSiteResponse<GameSession>
   }
+
+  const client = new Client(process.env.GAME_SERVER_URL ?? '')
 
   // TODO MAKE SURE YOU HAVE PERMS TO DO SUCH A THING
   try {
@@ -55,6 +59,11 @@ export async function createGameSession(sessionData: Partial<GameSession>, quizI
       const newPlayerResponse = await createGameSessionPlayer(session.id, i)
       playerSessionsResponses.push(newPlayerResponse)
     }
+
+    client.create<GameRoom>(`game_room`, {
+      session,
+      players: playerSessionsResponses.map((p) => p.data),
+    })
 
     return {
       data: session,
@@ -86,6 +95,7 @@ export async function getSessionById(sessionId: number) {
     const data = await payload.findByID({
       collection: 'game-session',
       id: sessionId,
+      depth: 4,
     })
 
     if (!data) {
@@ -347,62 +357,6 @@ export async function createGameSessionPlayer(sessionId: number, index: number) 
   }
 }
 
-export async function submitAnswer(
-  playerId: number,
-  sessionId: number,
-  answerIndex: number,
-): Promise<StandardSiteResponse<{}>> {
-  try {
-    const headers = await getHeaders()
-    const payloadConfig = await config
-    const payload = await getPayload({ config: payloadConfig })
-    //const { user } = await payload.auth({ headers })
-    const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
-
-    const existingPlayersSession = await payload.findByID({
-      collection: 'game-session-player',
-      id: playerId,
-    })
-
-    const existingAnswers = existingPlayersSession.answers as unknown as number[]
-
-    payload.update({
-      collection: 'game-session-player',
-      data: {
-        answers: [...existingAnswers, answerIndex],
-      },
-      where: {
-        and: [
-          {
-            id: { equals: playerId },
-          },
-          {
-            session: { equals: sessionId },
-          },
-        ],
-      },
-    })
-
-    return {
-      data: {},
-      domain: 'Game Session Submit Answer',
-      error: false,
-      messages: [],
-      success: true,
-      hint_http: 200,
-    }
-  } catch (e: any) {
-    return {
-      data: {},
-      domain: 'Game Session Submit Answer',
-      error: true,
-      messages: [(e as Error).message],
-      success: false,
-      hint_http: 400,
-    }
-  }
-}
-
 export async function getUserGameSessions(): Promise<StandardSiteResponse<GameSession[]>> {
   try {
     const headers = await getHeaders()
@@ -507,6 +461,38 @@ export async function getSessionPlayers(
       messages: [(e as Error).message],
       success: true,
     } as StandardSiteResponse<GameSessionPlayer[]>
+  }
+}
+
+export async function getSessionPlayerById(
+  playerId: number,
+): Promise<StandardSiteResponse<GameSessionPlayer>> {
+  const headers = await getHeaders()
+  const payloadConfig = await config
+  const payload = await getPayload({ config: payloadConfig })
+  //const { user } = await payload.auth({ headers })
+  const fileURL = `vscode://file/${fileURLToPath(import.meta.url)}`
+  try {
+    const player = await payload.findByID({
+      collection: 'game-session-player',
+      id: playerId,
+    })
+
+    return {
+      data: player,
+      domain: 'Get Session Player by Id',
+      error: false,
+      messages: ['Retrieved Player'],
+      success: true,
+    } as StandardSiteResponse<GameSessionPlayer>
+  } catch (e) {
+    return {
+      data: null,
+      domain: 'Get Session Players',
+      error: false,
+      messages: [(e as Error).message],
+      success: true,
+    } as StandardSiteResponse<GameSessionPlayer>
   }
 }
 

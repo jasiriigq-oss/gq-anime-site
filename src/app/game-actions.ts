@@ -3,7 +3,6 @@
 import { StandardSiteResponse } from '@/m0ves/lib/StandardSiteResponse'
 import {
   getUserGameSessions,
-  submitAnswer,
   createGameSession,
   getAvailableQuizzes,
   getSessionById,
@@ -33,22 +32,6 @@ export async function createGameSessionAction(
   )
 
   console.log({ result })
-  return {
-    result,
-  }
-}
-
-export interface SubmitAnswerActionState {
-  result: StandardSiteResponse<{}>
-}
-export async function submitAnswerAction(
-  initialState: any,
-  formdata: FormData,
-): Promise<SubmitAnswerActionState> {
-  const playerId = parseInt(formdata.get('playerId')?.toString() ?? '-1')
-  const sessionId = parseInt(formdata.get('sessionId')?.toString() ?? '-1')
-  const answerIndex = parseInt(formdata.get('answerIndex')?.toString() ?? '-1')
-  const result = await submitAnswer(playerId, sessionId, answerIndex)
   return {
     result,
   }
