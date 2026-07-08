@@ -1,92 +1,63 @@
 'use client'
 
-import { Callbacks, type Room } from '@colyseus/sdk'
-import { type GameRoom } from 'game-server/src/rooms/GameRoom'
-import { Player, type GameRoomState } from 'game-server/src/rooms/schema/GameRoomState'
 import { RoundTimer } from './RoundTimer'
-import { GameSession, GameSessionPlayer, Question, Quiz } from '@/payload-types'
-import { useState } from 'react'
-import { useRoomState } from '@colyseus/react'
+import { useContext } from 'react'
 import { AnswerOptions } from './AnswerOptions'
 import { AddPlayerToSessionForm } from './AddPlayerToSessionForm'
-import { Nullable } from '@/m0ves/lib/Nullable'
+import { GameState, GameStoreContext } from './game-state'
+import { RoleView } from './RoleView'
+import { AdminGameBar } from './AdminGameBar'
+import { PlayerStatusCard } from './PlayerStatusCard'
 
-export interface GameContainerProps extends React.PropsWithChildren {
-  room?: Room<GameRoom, GameRoomState>
-  session: GameSession
-  mode: 'admin' | 'spectator' | 'player'
-  currentPlayer: Nullable<Player>
-  sessionPlayer: Nullable<GameSessionPlayer>
-  allPlayers: Nullable<Record<string, Player>>
-}
-export const GameContainer: React.FC<GameContainerProps> = ({
-  room,
-  children,
-  session,
-  mode,
-  currentPlayer,
-  allPlayers,
-  sessionPlayer,
-}: GameContainerProps) => {
-  const quiz = session.quiz as Quiz
-  const questions = quiz.questions?.map((q) => q.question)
-  const gameStarted = useRoomState(room, (r) => r.started)
-  const roundStarted = useRoomState(room, (r) => r.roundStarted)
+export interface GameContainerProps extends React.PropsWithChildren {}
+export const GameContainer: React.FC<GameContainerProps> = ({}: GameContainerProps) => {
+  const ctx = useContext(GameStoreContext)
 
-  const round = useRoomState(room, (r) => r.round) ?? 0
-  const currentQuestion = questions?.[round ?? 0] as Question
-
-  function _startGameHandle() {
-    room?.send('startGame')
-  }
-
-  function _startRoundHandle() {
-    room?.send('startRound')
-  }
+  const {
+    round,
+    roundEnded,
+    currentQuestion,
+    roundStarted,
+    gameStarted,
+    quiz,
+    room,
+    mode,
+    currentPlayer,
+    sessionPlayer,
+    session,
+    sessionPlayers,
+    playersList,
+  } = ctx as GameState
 
   return (
     <div className="w-screen h-screen bg-black relative p-4">
       <div>
-        <div className="text-center text-white font-black text-2xl">{quiz.name}</div>
-        {roundStarted && (
-          <div className="text-center text-white font-black text-3xl">{currentQuestion.name}</div>
-        )}
-        {mode == 'admin' && !gameStarted && (
-          <div className="flex justify-center my-2">
-            <button
-              title="Start Game"
-              onClick={(e) => _startGameHandle()}
-              type="button"
-              className="btn btn-active"
-            >
-              Start Game
-            </button>
-          </div>
-        )}
-        {mode == 'admin' && gameStarted && !roundStarted && (
-          <div className="flex justify-center my-2">
-            <button
-              title="Start Game"
-              onClick={(e) => _startRoundHandle()}
-              type="button"
-              className="btn btn-active"
-            >
-              Start Round {round + 1}
-            </button>
-          </div>
-        )}
-
-        {roundStarted && <RoundTimer room={room} />}
-        {roundStarted && <AnswerOptions room={room} question={currentQuestion} />}
+        <div id="stage">
+          <div className="text-center text-white font-black text-2xl">{quiz?.name}</div>
+          {roundStarted && (
+            <div className="text-center text-white font-black text-3xl">
+              {currentQuestion?.name}
+            </div>
+          )}
+        </div>
+        <div id="players">
+          {sessionPlayers.map((sp) => {
+            return (
+              <div key={sp.id}>
+                <PlayerStatusCard sessionPlayer={sp}></PlayerStatusCard>
+              </div>
+            )
+          })}
+        </div>
+        {roundStarted && <RoundTimer />}
+        {roundStarted && <AnswerOptions question={currentQuestion} />}
       </div>
-
-      {mode == 'player' &&
-        currentPlayer &&
-        !currentPlayer.ready &&
-        currentPlayer &&
-        sessionPlayer && (
-          <AddPlayerToSessionForm room={room} player={sessionPlayer} sessionId={session.id} />
-        )}
+      <RoleView forModeRole="player">
+        <AddPlayerToSessionForm />
+      </RoleView>
+      <RoleView forModeRole="admin">
+        <AdminGameBar></AdminGameBar>
+      </RoleView>
     </div>
   )
 }

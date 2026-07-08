@@ -8,6 +8,7 @@ import {
   type Question,
 } from '@webserver/payload-types'
 import { supabase } from '../supabase'
+import { round } from 'lodash'
 export class GameRoom extends Room {
   override maxClients = 6
   override state = new GameRoomState()
@@ -19,6 +20,16 @@ export class GameRoom extends Room {
   endRound(time: number) {
     this.broadcast('round-end', { time })
     this.state.roundEnded = true
+    Array.from(this.state.players.values()).forEach((p) => {
+      const playerAnswer = p.answers[this.state.round]
+      const hasCorrectAnswer =
+        this.questions[this.state.round]?.answers?.[playerAnswer ?? -1]?.isCorrect
+      if (hasCorrectAnswer === false) {
+        p.eliminated = true
+      } else {
+        p.score++
+      }
+    })
   }
   gameRound(time: number) {
     this.broadcast('game-end', { time })
@@ -30,26 +41,28 @@ export class GameRoom extends Room {
       player.ready = true
       player.picture = message.picture
       player.name = message.name
+      // supabase
+      //   ?.from('game_session_player')
+      //   .update({
+      //     name: message.name,
+      //     picture: message.picture,
+      //     ready: true,
+      //   })
+      //   .eq('id', player.sessionId)
 
-      supabase?.from('game_session_player').update({
-        name: message.name,
-        picture: message.picture,
-        ready: true,
-      })
-
-      // console.log(client.sessionId, 'sent a message:', message)
+      console.log(client.sessionId, 'sent a message:', message)
     },
     startGame: (client: Client, message: {}) => {
-      const player = this.state.players.get(client.id) as Player
+      const player = this.state.players.get(client.sessionId) as Player
       if (player.role == 'admin') {
         this.state.started = true
-        supabase
-          ?.from('game_session')
-          .update({
-            state: 'in-progress',
-            start_time: new Date().toISOString(),
-          })
-          .eq('id', this.gameSession.id)
+        // supabase
+        //   ?.from('game_session')
+        //   .update({
+        //     state: 'in-progress',
+        //     start_time: new Date().toISOString(),
+        //   })
+        //   .eq('id', this.gameSession.id)
       }
     },
     startRound: (client: Client, message: {}) => {
@@ -57,6 +70,7 @@ export class GameRoom extends Room {
       if (player.role != 'admin') return
 
       this.state.roundStartTime = Date.now()
+      console.log(client.sessionId, 'sent a message:', message)
 
       if (this.state.round != 0) {
         this.state.round++
@@ -66,19 +80,22 @@ export class GameRoom extends Room {
       this.state.roundSecondsLeft = this.questions[this.state.round]?.timeLimit ?? 0
 
       const interval = this.clock.setInterval(() => {
+        const allAnswersSubmited = Array.from(this.state.players.values()).every(
+          (p) => p.answers.length == this.state.round + 1,
+        )
         this.state.roundSecondsLeft--
-        if (this.state.roundSecondsLeft <= 0) {
+        if (this.state.roundSecondsLeft <= 0 || allAnswersSubmited) {
           this.endRound(Date.now())
           interval.clear()
         }
       }, 1000) // tis in ms
 
-      supabase
-        ?.from('game_session')
-        .update({
-          round: this.state.round,
-        })
-        .eq('id', this.gameSession.id)
+      // supabase
+      //   ?.from('game_session')
+      //   .update({
+      //     round: this.state.round,
+      //   })
+      //   .eq('id', this.gameSession.id)
     },
     submitAnswer: (client: Client, message: { answerIndex: number }) => {
       const player = this.state.players.get(client.sessionId)
@@ -86,13 +103,14 @@ export class GameRoom extends Room {
       if (player.answers.length >= this.state.round + 1) return
 
       player.answers.push(message.answerIndex)
+      console.log(client.sessionId, 'sent a message:', message)
 
-      supabase
-        ?.from('game_session_player')
-        .update({
-          answers: JSON.stringify(player.answers),
-        })
-        .eq('id', player.sessionId)
+      // supabase
+      //   ?.from('game_session_player')
+      //   .update({
+      //     answers: JSON.stringify(player.answers),
+      //   })
+      //   .eq('id', player.sessionId)
     },
   }
 
@@ -100,7 +118,7 @@ export class GameRoom extends Room {
     this.gameSession = session
     this.gameQuiz = session.quiz as Quiz
     this.questions = this.gameQuiz?.questions?.map((q) => q.question) as Question[]
-
+    //#region Realtime Logic
     /**
      * Called when a new room is created.
      */
@@ -135,6 +153,7 @@ export class GameRoom extends Room {
     //   .subscribe((status, error) => {
     //     if (error) console.error(error)
     //   })
+    //#endregion
   }
 
   override onJoin(client: Client, options: any) {
@@ -148,17 +167,21 @@ export class GameRoom extends Room {
     const newPlayer = existingPlayer ?? new Player()
 
     newPlayer.role = mode
+
     if (mode == 'admin' || mode == 'spectator') {
       newPlayer.name = mode
       newPlayer.sessionId = -1
     }
-    if (mode == 'player' && player && !existingPlayer) {
-      newPlayer.sessionId = player.id
+
+    if (mode == 'spectator') newPlayer.sessionId = -2
+
+    if (mode == 'player') {
+      newPlayer.sessionId = player?.id
       newPlayer.name = player.name
       newPlayer.index = player.index
     }
 
-    newPlayer.clientId = client.id
+    newPlayer.clientId = client.sessionId
     newPlayer.mode = mode
 
     this.state.players.set(client.sessionId, newPlayer)
