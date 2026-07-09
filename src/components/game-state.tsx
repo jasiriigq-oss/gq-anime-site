@@ -1,8 +1,8 @@
 'use client'
+
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
-import { usePathname } from 'next/navigation'
 import { GameRoom } from 'game-server/src/rooms/GameRoom'
-import { GameRoomState, Player } from 'game-server/src/rooms/schema/GameRoomState'
+import { type GameRoomState, type Player } from 'game-server/src/rooms/schema/GameRoomState'
 import { Callbacks, Client, type Room } from '@colyseus/sdk'
 import { Nullable } from '@/m0ves/lib/Nullable'
 import { GameSessionPlayer, GameSession, Quiz, Question } from '@/payload-types'
@@ -29,6 +29,8 @@ export interface GameState {
   questions?: Question[]
   currentQuestion?: Question
   gameStarted?: boolean
+  tick?: number
+  questionsLeft?: number
 }
 export const createGameStore = (props: GameState) => {
   return props
@@ -36,7 +38,7 @@ export const createGameStore = (props: GameState) => {
 
 export const GameStoreContext = createContext<GameState | undefined>(undefined)
 
-export const GameStoreProvider = ({
+const GameStoreProvider = ({
   children,
   serverAddress,
   session,
@@ -44,6 +46,7 @@ export const GameStoreProvider = ({
   sessionPlayer,
   sessionPlayers,
 }: { children: React.ReactNode } & GameState) => {
+  'use client'
   const client = useMemo(() => new Client(serverAddress), [serverAddress])
   const [allPlayers, setAllPlayers] = useState<Record<number, Player>>({})
   const { room, error, isConnecting } = useRoom(() => {
@@ -54,14 +57,15 @@ export const GameStoreProvider = ({
     })
     return state
   })
-  const round = useRoomState(room, (s) => room?.state.round)
+  const round = useRoomState(room, (r) => r.round)
   const roundStarted = useRoomState(room, (r) => r.roundStarted)
   const roundEnded = useRoomState(room, (r) => r.roundEnded)
   const roundSecondsLeft = useRoomState(room, (r) => r.roundSecondsLeft)
   const gameStarted = useRoomState(room, (r) => r.started)
-
+  const tick = useRoomState(room, (r) => r.tick)
   const quiz = session?.quiz as Quiz
   const questions = quiz.questions?.map((q) => q.question as Question)
+  const questionsLeft = (questions?.length ?? 0) - (round ?? 0) - 1
   const currentQuestion = questions?.[round ?? 0] as Question
 
   room?.onMessage('round-start', (message) => {})
@@ -79,6 +83,7 @@ export const GameStoreProvider = ({
       // Listen for changes on nested properties
       callbacks.listen(sp, 'ready', (ready, prevReady) => {
         allPlayers[sp.sessionId] = sp
+        console.log({ sp }, 'is ready')
         setAllPlayers(allPlayers)
       })
       callbacks.listen(sp, 'eliminated', (eliminated, prevEliminated) => {
@@ -95,7 +100,7 @@ export const GameStoreProvider = ({
     })
 
     return () => {}
-  }, [room, round, roundStarted, roundEnded, currentPlayer])
+  }, [room, round, roundStarted, roundEnded, currentPlayer, allPlayers])
 
   const store = createGameStore({
     mode,
@@ -118,7 +123,10 @@ export const GameStoreProvider = ({
     gameStarted,
     allPlayers,
     playersList,
+    tick,
+    questionsLeft,
   })
-  console.log(store)
   return <GameStoreContext.Provider value={store}>{children}</GameStoreContext.Provider>
 }
+
+export default GameStoreProvider

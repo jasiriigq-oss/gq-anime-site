@@ -7,8 +7,6 @@ import {
   type Quiz,
   type Question,
 } from '@webserver/payload-types'
-import { supabase } from '../supabase'
-import { round } from 'lodash'
 export class GameRoom extends Room {
   override maxClients = 6
   override state = new GameRoomState()
@@ -31,6 +29,7 @@ export class GameRoom extends Room {
       }
     })
   }
+
   gameRound(time: number) {
     this.broadcast('game-end', { time })
   }
@@ -52,6 +51,15 @@ export class GameRoom extends Room {
 
       console.log(client.sessionId, 'sent a message:', message)
     },
+    nextRound: (client: Client, message: {}) => {
+      const player = this.state.players.get(client.sessionId) as Player
+      if (player.role == 'admin') {
+        this.state.round++
+        this.state.roundStarted = false
+        this.state.roundEnded = false
+        console.log('time for next round')
+      }
+    },
     startGame: (client: Client, message: {}) => {
       const player = this.state.players.get(client.sessionId) as Player
       if (player.role == 'admin') {
@@ -71,11 +79,6 @@ export class GameRoom extends Room {
 
       this.state.roundStartTime = Date.now()
       console.log(client.sessionId, 'sent a message:', message)
-
-      if (this.state.round != 0) {
-        this.state.round++
-      }
-
       this.state.roundStarted = true
       this.state.roundSecondsLeft = this.questions[this.state.round]?.timeLimit ?? 0
 
@@ -118,6 +121,9 @@ export class GameRoom extends Room {
     this.gameSession = session
     this.gameQuiz = session.quiz as Quiz
     this.questions = this.gameQuiz?.questions?.map((q) => q.question) as Question[]
+    this.clock.setInterval(() => {
+      this.state.tick++
+    }, 1000)
     //#region Realtime Logic
     /**
      * Called when a new room is created.

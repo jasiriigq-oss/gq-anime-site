@@ -15,7 +15,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({ question }: Answer
   const [selectAnswerIndex, setSelectAnswerIndex] = useState<number | null>(null)
   const ctx = useContext(GameStoreContext)
 
-  const { roundEnded, room } = ctx as GameState
+  const { roundEnded, room, mode } = ctx as GameState
 
   async function _handleSelectAnswer(index: number) {
     room?.send('submitAnswer', { answerIndex: index })
@@ -28,7 +28,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({ question }: Answer
         return (
           <button
             title={`Answer - ${qa.text}`}
-            disabled={roundEnded === true}
+            disabled={roundEnded === true || mode == 'admin'}
             onClick={() => _handleSelectAnswer(i)}
             key={qa.id}
             className={`${selectAnswerIndex == i ? 'bg-fuchsia-900' : ''} relative not-disabled:cursor-pointer transition-all border border-fuchsia-700 rounded-lg w-full min-h-40 hover:not-disabled:bg-fuchsia-500 flex justify-center items-center`}

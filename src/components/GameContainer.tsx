@@ -30,17 +30,22 @@ export const GameContainer: React.FC<GameContainerProps> = ({}: GameContainerPro
   } = ctx as GameState
 
   return (
-    <div className="w-screen h-screen bg-black relative p-4">
-      <div>
-        <div id="stage">
+    <div className="min-h-75 bg-black relative pb-5">
+      <div className="flex flex-col lg:flex-row">
+        <div id="stage" className="flex flex-col justify-center flex-1">
           <div className="text-center text-white font-black text-2xl">{quiz?.name}</div>
           {roundStarted && (
             <div className="text-center text-white font-black text-3xl">
               {currentQuestion?.name}
             </div>
           )}
+          {roundStarted && <RoundTimer />}
+          {roundStarted && <AnswerOptions question={currentQuestion} />}
+          <RoleView forModeRole="admin">
+            <AdminGameBar></AdminGameBar>
+          </RoleView>
         </div>
-        <div id="players">
+        <div id="players" className="p-2">
           {sessionPlayers.map((sp) => {
             return (
               <div key={sp.id}>
@@ -49,14 +54,9 @@ export const GameContainer: React.FC<GameContainerProps> = ({}: GameContainerPro
             )
           })}
         </div>
-        {roundStarted && <RoundTimer />}
-        {roundStarted && <AnswerOptions question={currentQuestion} />}
       </div>
       <RoleView forModeRole="player">
         <AddPlayerToSessionForm />
-      </RoleView>
-      <RoleView forModeRole="admin">
-        <AdminGameBar></AdminGameBar>
       </RoleView>
     </div>
   )

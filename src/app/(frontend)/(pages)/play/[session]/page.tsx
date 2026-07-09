@@ -1,4 +1,3 @@
-'use server'
 import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
@@ -8,8 +7,8 @@ import config from '@/payload.config'
 import { RouteProps } from '@/m0ves/lib/RouteProps'
 import { getSessionAndPlayers, getSessionById, getSessionPlayerById } from '@/app/game-operations'
 import { Quiz, Media, GameSession } from '@/payload-types'
-import { GameRoomComponent } from '@/components/GameRoomComponent'
-import { GameStoreProvider } from '@/components/game-state'
+import GameRoomComponent from '@/components/GameRoomComponent'
+import GameWrapper from '@/components/GameWrapper'
 
 export default async function PlaySessionPage(
   props: RouteProps<{ session: string; player?: string }>,
@@ -36,7 +35,7 @@ export default async function PlaySessionPage(
   )
 
   return (
-    <GameStoreProvider
+    <GameWrapper
       session={session}
       sessionPlayer={sessionPlayer}
       mode={mode as any}
@@ -44,6 +43,6 @@ export default async function PlaySessionPage(
       sessionPlayers={sessionPlayers ?? []}
     >
       {session && <GameRoomComponent />}
-    </GameStoreProvider>
+    </GameWrapper>
   )
 }

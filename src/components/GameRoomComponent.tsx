@@ -8,7 +8,7 @@ import { GameState, GameStoreContext } from './game-state'
 import { RoleView } from './RoleView'
 
 export interface GameRoomComponentProps extends React.PropsWithChildren {}
-export const GameRoomComponent: React.FC<GameRoomComponentProps> = ({}: GameRoomComponentProps) => {
+const GameRoomComponent: React.FC<GameRoomComponentProps> = ({}: GameRoomComponentProps) => {
   'use client'
   const ctx = useContext(GameStoreContext)
 
@@ -27,10 +27,7 @@ export const GameRoomComponent: React.FC<GameRoomComponentProps> = ({}: GameRoom
               return (
                 <ContentWell key={playerSession.id} className="w-fit place-self-center">
                   <div className="max-w-sm mx-auto">
-                    <JoinCard
-                      player={allPlayers?.[playerSession.id]}
-                      playerSession={playerSession}
-                    />
+                    <JoinCard playerSession={playerSession} />
                   </div>
                 </ContentWell>
               )
@@ -41,3 +38,4 @@ export const GameRoomComponent: React.FC<GameRoomComponentProps> = ({}: GameRoom
     </div>
   )
 }
+export default GameRoomComponent

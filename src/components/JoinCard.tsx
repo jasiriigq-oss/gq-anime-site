@@ -3,14 +3,14 @@ import { GameSession, GameSessionPlayer } from '@/payload-types'
 import QRCode from 'react-qr-code'
 import { FaCopy } from 'react-icons/fa'
 import { createPlayerLink, getPlayerColorFromIndex } from '@/app/game-lib'
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { type Player } from 'game-server/src/rooms/schema/GameRoomState'
+import { GameStoreContext, GameState } from './game-state'
 
 export interface JoinCardProps extends React.PropsWithChildren {
   playerSession: GameSessionPlayer
-  player?: Player
 }
-export const JoinCard: React.FC<JoinCardProps> = ({ playerSession, player }: JoinCardProps) => {
+export const JoinCard: React.FC<JoinCardProps> = ({ playerSession }: JoinCardProps) => {
   const [contentCopied, setContentCopied] = useState(false)
 
   const color = getPlayerColorFromIndex(playerSession.index)
@@ -25,8 +25,14 @@ export const JoinCard: React.FC<JoinCardProps> = ({ playerSession, player }: Joi
     await navigator.clipboard.write([clipboardItem])
   }
 
+  const ctx = useContext(GameStoreContext)
+
+  const { playersList } = ctx as GameState
+
+  const player = playersList?.find((p) => p.sessionId == playerSession.id)
+
   return (
-    <div className="card bg-base-100 w-80 shadow-sm my-4 max-w-xs">
+    <div className="card bg-neutral-800 w-80 shadow-sm my-4 max-w-70">
       <div className="card-body p-1">
         <div className="flex items-center gap-3">
           {player?.picture && player?.picture != 'unset' && (
@@ -62,7 +68,7 @@ export const JoinCard: React.FC<JoinCardProps> = ({ playerSession, player }: Joi
                     <FaCopy />
                   </button>
                 </div>
-                <div>Player {player?.name ?? `${color.name}`}</div>
+                <div className="text-sm">Player {player?.name ?? `${color.name}`}</div>
               </div>
               <div className="badge badge-secondary">{player?.ready ? 'Ready' : 'Joining...'}</div>
             </div>

@@ -37,6 +37,8 @@ export const AddPlayerToSessionForm: React.FC<
   }
   useEffect(() => {}, [currentPlayer, currentPlayer?.ready, sessionPlayer])
 
+  if (currentPlayer?.ready) return <></>
+
   return (
     <div className={'w-fit mx-auto ' + (currentPlayer?.ready === true ? ' hidden' : '')}>
       <form onSubmit={_handleSubmit}>
