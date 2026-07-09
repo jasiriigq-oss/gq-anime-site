@@ -4,7 +4,6 @@ import QRCode from 'react-qr-code'
 import { FaCopy } from 'react-icons/fa'
 import { createPlayerLink, getPlayerColorFromIndex } from '@/app/game-lib'
 import { useContext, useState } from 'react'
-import { type Player } from 'game-server/src/rooms/schema/GameRoomState'
 import { GameStoreContext, GameState } from './game-state'
 
 export interface JoinCardProps extends React.PropsWithChildren {

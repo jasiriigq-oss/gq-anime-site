@@ -1,6 +1,5 @@
 import { GameSessionPlayer } from '@/payload-types'
 import { useRoomState } from '@colyseus/react'
-import { type GameRoom } from 'game-server/src/rooms/GameRoom'
 import { Player } from 'game-server/src/rooms/schema/GameRoomState'
 import { useContext } from 'react'
 import { GameStoreContext, GameState } from './game-state'
