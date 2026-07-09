@@ -1,4 +1,3 @@
-'use server'
 import { headers as getHeaders } from 'next/headers.js'
 import Image from 'next/image'
 import { getPayload } from 'payload'
@@ -6,10 +5,10 @@ import React from 'react'
 import { fileURLToPath } from 'url'
 import config from '@/payload.config'
 import { RouteProps } from '@/m0ves/lib/RouteProps'
-import RealTimeFeed from '@/components/RealTimeFeed'
 import { getSessionAndPlayers, getSessionById, getSessionPlayerById } from '@/app/game-operations'
 import { Quiz, Media, GameSession } from '@/payload-types'
-import { GameRoomComponent } from '@/components/GameRoomComponent'
+import GameRoomComponent from '@/components/GameRoomComponent'
+import GameWrapper from '@/components/GameWrapper'
 
 export default async function PlaySessionPage(
   props: RouteProps<{ session: string; player?: string }>,
@@ -25,25 +24,25 @@ export default async function PlaySessionPage(
   const sessionAndPlayers = await getSessionAndPlayers(sessionId)
 
   const session = sessionAndPlayers.data?.session
-  const players = sessionAndPlayers.data?.players
+  const sessionPlayers = sessionAndPlayers.data?.players
 
   const quiz = session?.quiz as Quiz
 
   const cover = quiz?.cover as Media | undefined
 
-  const player = players?.find((p) => p.id == parseInt((playerId as string | null) ?? '-1'))
+  const sessionPlayer = sessionPlayers?.find(
+    (p) => p.id == parseInt((playerId as string | null) ?? '-1'),
+  )
 
   return (
-    <>
-      {session && (
-        <GameRoomComponent
-          session={session}
-          player={player}
-          players={players ?? []}
-          serverAddress={process.env.GAME_SERVER_URL ?? ''}
-          mode={mode as any}
-        />
-      )}
-    </>
+    <GameWrapper
+      session={session}
+      sessionPlayer={sessionPlayer}
+      mode={mode as any}
+      serverAddress={process.env.GAME_SERVER_URL ?? ''}
+      sessionPlayers={sessionPlayers ?? []}
+    >
+      {session && <GameRoomComponent />}
+    </GameWrapper>
   )
 }

@@ -3,15 +3,13 @@ import { useRoomState } from '@colyseus/react'
 import { Room } from '@colyseus/sdk'
 import { type GameRoom } from 'game-server/src/rooms/GameRoom'
 import { type GameRoomState } from 'game-server/src/rooms/schema/GameRoomState'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
+import { GameState, GameStoreContext } from './game-state'
 
-export interface RoundTimerProps extends React.PropsWithChildren {
-  room?: Room<GameRoom, GameRoomState>
-}
-export const RoundTimer: React.FC<RoundTimerProps> = ({ room }: RoundTimerProps) => {
-  const round = useRoomState(room, (r) => r.round)
-  const roundStarted = useRoomState(room, (r) => r.roundStarted)
-  const roundSecondsLeft = useRoomState(room, (r) => r.roundSecondsLeft)
+export interface RoundTimerProps extends React.PropsWithChildren {}
+export const RoundTimer: React.FC<RoundTimerProps> = ({}: RoundTimerProps) => {
+  const ctx = useContext(GameStoreContext)
+  const { round, roundStarted, roundSecondsLeft } = ctx as GameState
 
   useEffect(() => {}, [round, roundSecondsLeft, roundStarted])
   return (

@@ -2,8 +2,8 @@ import { Schema, MapSchema, type, ArraySchema } from '@colyseus/schema'
 export class Player extends Schema {
   @type('number') sessionId: number = -1
   @type('string') clientId: string = ''
-  @type('string') name: string = '(unset)'
-  @type('string') role: string = '(unset)'
+  @type('string') name: string = ''
+  @type('string') role: string = ''
   @type(['number']) answers: number[] = []
   @type('number') index: number = -1
   @type('number') score: number = 0
@@ -22,4 +22,5 @@ export class GameRoomState extends Schema {
 
   @type('number') roundStartTime: number = -1
   @type('number') roundSecondsLeft: number = -1
+  @type('number') tick: number = -1
 }

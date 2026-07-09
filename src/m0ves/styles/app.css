@@ -3,40 +3,42 @@
    themes: m0ves;
  }
 
+
 @plugin "daisyui/theme" {
   name: "m0ves";
   default: false;
   prefersdark: false;
-  color-scheme: "light";
-  --color-base-100: oklch(98% 0.019 200.873);
-  --color-base-200: oklch(95% 0.045 203.388);
-  --color-base-300: oklch(91% 0.08 205.041);
-  --color-base-content: oklch(39% 0.07 227.392);
-  --color-primary: oklch(80% 0.105 251.813);
-  --color-primary-content: oklch(28% 0.091 267.935);
-  --color-secondary: oklch(0% 0 0);
-  --color-secondary-content: oklch(100% 0 0);
-  --color-accent: oklch(87% 0.169 91.605);
-  --color-accent-content: oklch(27% 0.077 45.635);
-  --color-neutral: oklch(39% 0.07 227.392);
-  --color-neutral-content: oklch(98% 0.019 200.873);
-  --color-info: oklch(68% 0.169 237.323);
-  --color-info-content: oklch(97% 0.013 236.62);
-  --color-success: oklch(72% 0.219 149.579);
-  --color-success-content: oklch(98% 0.018 155.826);
-  --color-warning: oklch(76% 0.188 70.08);
-  --color-warning-content: oklch(98% 0.022 95.277);
-  --color-error: oklch(64% 0.246 16.439);
-  --color-error-content: oklch(96% 0.015 12.422);
-  --radius-selector: 0rem;
-  --radius-field: 0rem;
+  color-scheme: "dark";
+  --color-base-100: oklch(14% 0.005 285.823);
+  --color-base-200: oklch(21% 0.006 285.885);
+  --color-base-300: oklch(27% 0.006 286.033);
+  --color-base-content: oklch(96% 0.001 286.375);
+  --color-primary: oklch(0% 0 0);
+  --color-primary-content: oklch(100% 0 0);
+  --color-secondary: oklch(55% 0.027 264.364);
+  --color-secondary-content: oklch(98% 0.002 247.839);
+  --color-accent: oklch(55% 0 0);
+  --color-accent-content: oklch(98% 0 0);
+  --color-neutral: oklch(27% 0.006 286.033);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(78% 0.154 211.53);
+  --color-info-content: oklch(30% 0.056 229.695);
+  --color-success: oklch(79% 0.209 151.711);
+  --color-success-content: oklch(26% 0.065 152.934);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(27% 0.077 45.635);
+  --color-error: oklch(71% 0.194 13.428);
+  --color-error-content: oklch(27% 0.105 12.094);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
   --radius-box: 0.5rem;
   --size-selector: 0.25rem;
   --size-field: 0.25rem;
   --border: 1px;
-  --depth: 0;
+  --depth: 1;
   --noise: 1;
 }
+
 
 @theme {
   --animate-fade-in: fadeIn 2s;
