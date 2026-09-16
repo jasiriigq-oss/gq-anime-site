@@ -67,11 +67,15 @@ export const JoinCard: React.FC<JoinCardProps> = ({ playerSession }: JoinCardPro
                     <FaCopy />
                   </button>
                 </div>
-                <div className="text-sm">Player {player?.name ?? `${color.name}`}</div>
+                <div className="text-sm">
+                  {!player?.name && <>Player</>} {player?.name ?? `${color.name}`}
+                </div>
               </div>
               <div className="badge badge-secondary">{player?.ready ? 'Ready' : 'Joining...'}</div>
             </div>
-            <p>Scan the QR Below to Join the game</p>
+            <div className="text-center">
+              {!player?.ready && <p>Scan the QR Below to Join the game</p>}
+            </div>
           </div>
         </div>
         {/* <div className="card-actions justify-end">
@@ -80,13 +84,15 @@ export const JoinCard: React.FC<JoinCardProps> = ({ playerSession }: JoinCardPro
         </div> */}
       </div>
       <figure>
-        <QRCode
-          size={128}
-          fgColor={color.hex}
-          style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
-          value={playerLink}
-          viewBox={`0 0 256 256`}
-        />
+        {!player?.ready && (
+          <QRCode
+            size={128}
+            fgColor={color.hex}
+            style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
+            value={playerLink}
+            viewBox={`0 0 256 256`}
+          />
+        )}
       </figure>
     </div>
   )

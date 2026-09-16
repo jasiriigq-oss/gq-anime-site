@@ -7,6 +7,9 @@ import {
   type Quiz,
   type Question,
 } from '@webserver/payload-types'
+
+import { supabase } from '../supabase'
+
 export class GameRoom extends Room {
   override maxClients = 6
   override state = new GameRoomState()
@@ -15,23 +18,29 @@ export class GameRoom extends Room {
   gameQuiz!: Quiz
   questions!: Question[]
 
-  endRound(time: number) {
-    this.broadcast('round-end', { time })
+  endRoundOperation() {
     this.state.roundEnded = true
     Array.from(this.state.players.values()).forEach((p) => {
-      const playerAnswer = p.answers[this.state.round]
+      if (p.role == 'admin') return
+      const playerAnswer = p.answers?.[this.state.round]
       const hasCorrectAnswer =
-        this.questions[this.state.round]?.answers?.[playerAnswer ?? -1]?.isCorrect
-      if (hasCorrectAnswer === false) {
+        playerAnswer &&
+        (this.questions[this.state.round]?.answers?.[playerAnswer ?? -1]?.isCorrect ?? false)
+      console.log('Round Ended: ', `player: ${p.name} isCorrect: ${hasCorrectAnswer}`)
+      if (!hasCorrectAnswer) {
         p.eliminated = true
       } else {
         p.score++
       }
     })
+
+    if (this.state.round >= this.questions.length - 1) {
+      this.endGameOperation()
+    }
   }
 
-  gameRound(time: number) {
-    this.broadcast('game-end', { time })
+  endGameOperation() {
+    this.broadcast('game-end', { time: Date.now() })
   }
 
   override messages = {
@@ -40,46 +49,51 @@ export class GameRoom extends Room {
       player.ready = true
       player.picture = message.picture
       player.name = message.name
-      // supabase
-      //   ?.from('game_session_player')
-      //   .update({
-      //     name: message.name,
-      //     picture: message.picture,
-      //     ready: true,
-      //   })
-      //   .eq('id', player.sessionId)
+      supabase
+        ?.from('game_session_player')
+        .update({
+          name: message.name,
+          picture: message.picture,
+          ready: true,
+        })
+        .eq('id', player.sessionId)
 
-      console.log(client.sessionId, 'sent a message:', message)
+      //console.log(client.sessionId, 'sent a message:', message)
     },
     nextRound: (client: Client, message: {}) => {
       const player = this.state.players.get(client.sessionId) as Player
-      if (player.role == 'admin') {
-        this.state.round++
-        this.state.roundStarted = false
-        this.state.roundEnded = false
-        console.log('time for next round')
-      }
+      if (player.role != 'admin') return
+      this.state.round = this.state.round + 1
+      this.state.roundStarted = false
+      this.state.roundEnded = false
+
+      // console.log('time for next round')
     },
     startGame: (client: Client, message: {}) => {
       const player = this.state.players.get(client.sessionId) as Player
       if (player.role == 'admin') {
         this.state.started = true
-        // supabase
-        //   ?.from('game_session')
-        //   .update({
-        //     state: 'in-progress',
-        //     start_time: new Date().toISOString(),
-        //   })
-        //   .eq('id', this.gameSession.id)
+        supabase
+          ?.from('game_session')
+          .update({
+            state: 'in-progress',
+            start_time: new Date().toISOString(),
+          })
+          .eq('id', this.gameSession.id)
       }
     },
+    endGame: (client: Client, message: {}) => {
+      const player = this.state.players.get(client.sessionId) as Player
+      if (player.role != 'admin') return
+      this.endGameOperation()
+    },
     startRound: (client: Client, message: {}) => {
-      const player = this.state.players.get(client.id) as Player
+      const player = this.state.players.get(client.sessionId) as Player
       if (player.role != 'admin') return
 
       this.state.roundStartTime = Date.now()
-      console.log(client.sessionId, 'sent a message:', message)
       this.state.roundStarted = true
+      this.state.roundEnded = false
       this.state.roundSecondsLeft = this.questions[this.state.round]?.timeLimit ?? 0
 
       const interval = this.clock.setInterval(() => {
@@ -88,7 +102,7 @@ export class GameRoom extends Room {
         )
         this.state.roundSecondsLeft--
         if (this.state.roundSecondsLeft <= 0 || allAnswersSubmited) {
-          this.endRound(Date.now())
+          this.endRoundOperation()
           interval.clear()
         }
       }, 1000) // tis in ms
@@ -103,10 +117,8 @@ export class GameRoom extends Room {
     submitAnswer: (client: Client, message: { answerIndex: number }) => {
       const player = this.state.players.get(client.sessionId)
       if (!player) return
-      if (player.answers.length >= this.state.round + 1) return
-
-      player.answers.push(message.answerIndex)
-      console.log(client.sessionId, 'sent a message:', message)
+      player.answers[this.state.round] = message.answerIndex
+      //console.log(client.sessionId, 'sent a message:', message)
 
       // supabase
       //   ?.from('game_session_player')
@@ -115,6 +127,20 @@ export class GameRoom extends Room {
       //   })
       //   .eq('id', player.sessionId)
     },
+    debugReset: (client: Client, message: {}) => {
+      const player = this.state.players.get(client.sessionId)
+      if (!player) return
+      this.state.round = 0
+      this.state.started = false
+      this.state.roundStarted = false
+      this.state.roundEnded = false
+      this.state.players.forEach((p) => {
+        p.score = 0
+        p.eliminated = false
+        p.answers = []
+      })
+    },
+    debugEndGame: (client: Client, message: {}) => {},
   }
 
   override onCreate({ session }: { session: GameSession }) {

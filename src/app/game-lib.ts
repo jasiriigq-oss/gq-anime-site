@@ -65,15 +65,15 @@ export const playerIconOptions: {
   image: string
 }[] = [
   {
-    image: 'https://picsum.photos/id/1/100/100',
+    image: '/game-assets/player-icon-luffy.jpg',
   },
   {
-    image: 'https://picsum.photos/id/2/100/100',
+    image: '/game-assets/player-icon-naruto.jpg',
   },
   {
-    image: 'https://picsum.photos/id/3/100/100',
+    image: '/game-assets/player-icon-ichigo.jpg',
   },
   {
-    image: 'https://picsum.photos/id/4/100/100',
+    image: '/game-assets/player-icon-yhwach.jpg',
   },
 ]

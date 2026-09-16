@@ -20,18 +20,22 @@ const GameRoomComponent: React.FC<GameRoomComponentProps> = ({}: GameRoomCompone
       {roomError && <div className="text-center">{roomError.message}</div>}
       <GameContainer></GameContainer>
       <RoleView forModeRole="admin">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-center text-2xl font-bold">Players</h2>
-          <div className="grid md:grid-cols-2 gap-4">
-            {sessionPlayers.map((playerSession) => {
-              return (
-                <ContentWell key={playerSession.id} className="w-fit place-self-center">
-                  <div className="max-w-sm mx-auto">
-                    <JoinCard playerSession={playerSession} />
-                  </div>
-                </ContentWell>
-              )
-            })}
+        <div className="collapse bg-base-100 border border-base-300 max-w-2xl mx-auto my-5">
+          <input type="checkbox" defaultChecked />
+          <div className="collapse-title font-semibold text-2xl">Players Links</div>
+          <div className="collapse-content">
+            <div className="my-4">
+              <h2 className="text-center text-2xl font-bold mb-5"></h2>
+              <div className="flex flex-wrap gap-4 justify-center">
+                {sessionPlayers.map((playerSession, i) => {
+                  return (
+                    <div className="max-w-sm mx-auto" key={i}>
+                      <JoinCard key={playerSession.id} playerSession={playerSession} />
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           </div>
         </div>
       </RoleView>

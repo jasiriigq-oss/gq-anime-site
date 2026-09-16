@@ -50,7 +50,7 @@ export const AddPlayerToSessionForm: React.FC<
         <fieldset className="fieldset bg-base-100 border-primary-content rounded-box w-xs border-2 p-4">
           <div className="flex justify-center">
             <img
-              className="rounded-full text-center"
+              className="rounded-full text-center h-30 aspect-square"
               src={playerIconOptions[selectedPlayerIconIndex].image}
               alt="Player Icon"
             />
@@ -60,7 +60,14 @@ export const AddPlayerToSessionForm: React.FC<
 
           <legend className="fieldset-legend text-2xl">Join Game</legend>
           <label className="label font-bold">Name</label>
-          <input name="name" required type="text" className="input" placeholder="My Player Name" />
+          <input
+            maxLength={12}
+            name="name"
+            required
+            type="text"
+            className="input"
+            placeholder="My Player Name"
+          />
           <button className="btn" type="submit">
             Join Game
           </button>

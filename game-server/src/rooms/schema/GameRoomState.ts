@@ -16,10 +16,10 @@ export class Player extends Schema {
 export class GameRoomState extends Schema {
   @type({ map: Player }) players = new MapSchema<Player>()
   @type('boolean') started: boolean = false
+  @type('boolean') ended: boolean = false
   @type('number') round: number = 0
   @type('boolean') roundStarted: boolean = false
   @type('boolean') roundEnded: boolean = false
-
   @type('number') roundStartTime: number = -1
   @type('number') roundSecondsLeft: number = -1
   @type('number') tick: number = -1

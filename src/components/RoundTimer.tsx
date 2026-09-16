@@ -12,6 +12,9 @@ export const RoundTimer: React.FC<RoundTimerProps> = ({}: RoundTimerProps) => {
   const { round, roundStarted, roundSecondsLeft } = ctx as GameState
 
   useEffect(() => {}, [round, roundSecondsLeft, roundStarted])
+
+  if (!roundStarted) return <></>
+
   return (
     <div className="flex justify-center my-2">
       <div className="flex justify-center items-center rounded-full bg-blue-500 h-20 text-white aspect-square text-4xl font-bold">

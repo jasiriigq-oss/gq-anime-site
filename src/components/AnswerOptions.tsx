@@ -11,15 +11,17 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({ question }: Answer
   const [selectAnswerIndex, setSelectAnswerIndex] = useState<number | null>(null)
   const ctx = useContext(GameStoreContext)
 
-  const { roundEnded, room, mode } = ctx as GameState
+  const { roundStarted, roundEnded, room, mode } = ctx as GameState
 
   async function _handleSelectAnswer(index: number) {
     room?.send('submitAnswer', { answerIndex: index })
     setSelectAnswerIndex(index)
   }
 
+  if (!roundStarted) return <></>
+
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className="grid grid-cols-2 gap-3 max-w-lg mx-auto w-full">
       {(question?.answers ?? []).map((qa, i) => {
         return (
           <button
@@ -27,7 +29,7 @@ export const AnswerOptions: React.FC<AnswerOptionsProps> = ({ question }: Answer
             disabled={roundEnded === true || mode == 'admin'}
             onClick={() => _handleSelectAnswer(i)}
             key={qa.id}
-            className={`${selectAnswerIndex == i ? 'bg-fuchsia-900' : ''} relative not-disabled:cursor-pointer transition-all border border-fuchsia-700 rounded-lg w-full min-h-40 hover:not-disabled:bg-fuchsia-500 flex justify-center items-center`}
+            className={`${selectAnswerIndex == i ? 'bg-fuchsia-900' : ''} relative not-disabled:cursor-pointer transition-all border border-fuchsia-700 rounded-lg w-full min-h-20 hover:not-disabled:bg-fuchsia-500 flex justify-center items-center`}
           >
             <div className="font-bold text-white">{qa.text}</div>
             {roundEnded && qa.isCorrect && (
