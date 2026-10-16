@@ -1,0 +1,11 @@
+[
+  {
+    "typname": "enum_questions_question_type"
+  },
+  {
+    "typname": "enum_game_session_state"
+  },
+  {
+    "typname": "enum_users_role"
+  }
+]

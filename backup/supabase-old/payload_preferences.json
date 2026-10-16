@@ -1,0 +1,164 @@
+[
+  {
+    "id": 1,
+    "key": "global-site-identity",
+    "value": {
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-25T23:43:23.405Z",
+    "created_at": "2026-06-25T23:43:25.777Z"
+  },
+  {
+    "id": 2,
+    "key": "collection-media",
+    "value": {
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-25T23:43:37.953Z",
+    "created_at": "2026-06-25T23:43:33.710Z"
+  },
+  {
+    "id": 4,
+    "key": "collection-users",
+    "value": {
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-28T17:38:48.746Z",
+    "created_at": "2026-06-28T17:38:44.335Z"
+  },
+  {
+    "id": 6,
+    "key": "collection-questions",
+    "value": {
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-28T20:47:35.571Z",
+    "created_at": "2026-06-28T20:47:41.081Z"
+  },
+  {
+    "id": 5,
+    "key": "collection-quizzes",
+    "value": {
+      "limit": 10,
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-29T04:36:38.334Z",
+    "created_at": "2026-06-28T20:47:29.168Z"
+  },
+  {
+    "id": 3,
+    "key": "collection-game-session",
+    "value": {
+      "limit": 10,
+      "columns": [
+        {
+          "active": true,
+          "accessor": "id"
+        },
+        {
+          "active": true,
+          "accessor": "name"
+        },
+        {
+          "active": true,
+          "accessor": "owners"
+        },
+        {
+          "active": true,
+          "accessor": "playerCount"
+        },
+        {
+          "active": true,
+          "accessor": "round"
+        },
+        {
+          "active": true,
+          "accessor": "state"
+        },
+        {
+          "active": true,
+          "accessor": "startTime"
+        },
+        {
+          "active": true,
+          "accessor": "endTime"
+        },
+        {
+          "active": true,
+          "accessor": "quiz"
+        },
+        {
+          "active": false,
+          "accessor": "players"
+        },
+        {
+          "active": false,
+          "accessor": "updatedAt"
+        },
+        {
+          "active": false,
+          "accessor": "createdAt"
+        }
+      ],
+      "editViewType": "default"
+    },
+    "updated_at": "2026-06-29T06:06:21.758Z",
+    "created_at": "2026-06-25T23:46:26.349Z"
+  },
+  {
+    "id": 7,
+    "key": "collection-game-session-player",
+    "value": {
+      "limit": 10,
+      "columns": [
+        {
+          "active": true,
+          "accessor": "id"
+        },
+        {
+          "active": true,
+          "accessor": "name"
+        },
+        {
+          "active": true,
+          "accessor": "session"
+        },
+        {
+          "active": true,
+          "accessor": "picture"
+        },
+        {
+          "active": true,
+          "accessor": "answers"
+        },
+        {
+          "active": false,
+          "accessor": "score"
+        },
+        {
+          "active": false,
+          "accessor": "eliminated"
+        },
+        {
+          "active": false,
+          "accessor": "index"
+        },
+        {
+          "active": false,
+          "accessor": "ready"
+        },
+        {
+          "active": false,
+          "accessor": "updatedAt"
+        },
+        {
+          "active": false,
+          "accessor": "createdAt"
+        }
+      ],
+      "editViewType": "default"
+    },
+    "updated_at": "2026-07-02T04:54:43.682Z",
+    "created_at": "2026-06-28T22:28:42.798Z"
+  }
+]

@@ -1,0 +1,29 @@
+$ cross-env NODE_OPTIONS=--no-deprecation next start
+▲ Next.js 16.2.6
+- Local:         http://localhost:3008
+- Network:       http://192.168.1.93:3008
+✓ Ready in 1999ms
+[18:33:42] [33mWARN[39m: [36mNo email adapter provided. Email will be written to console. More info at https://payloadcms.com/docs/email/overview.[39m
+[18:33:42] [31mERROR[39m: [36mYou are not allowed to perform this action.[39m
+    err: {
+      "type": "n",
+      "message": "You are not allowed to perform this action.",
+      "stack":
+          n: You are not allowed to perform this action.
+              at rk (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\[root-of-the-server]__03wfem_._.js:297:31943)
+              at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+              at async Aq (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\[root-of-the-server]__03wfem_._.js:297:200201)
+              at async r0 (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\[root-of-the-server]__03wfem_._.js:297:255357)
+              at async y (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\node_modules_0x146mc._.js:1:9372)
+              at async C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\node_modules_0x146mc._.js:1:17728
+              at async rW.do (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.prod.js:5:20926)
+              at async rW.handle (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.prod.js:5:25781)
+              at async d (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\.next\server\chunks\[root-of-the-server]__0mylggp._.js:1:17587)
+              at async rW.handleResponse (C:\Users\ventr\OneDrive\Desktop\qge-anime\qge-anime-site\node_modules\next\dist\compiled\next-server\app-route-turbo.runtime.prod.js:1:119701)
+      "data": null,
+      "isOperational": true,
+      "isPublic": true,
+      "status": 403,
+      "name": "n"
+    }
+error: script "start" exited with code 255

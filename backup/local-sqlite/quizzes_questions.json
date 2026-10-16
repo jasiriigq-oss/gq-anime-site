@@ -1,0 +1,41 @@
+[
+  {
+    "_order": 1,
+    "_parent_id": 1,
+    "id": "6ace9a03c96307d57c187d02",
+    "question_text": "In Jujutsu Kaisen, what is the name of Satoru Gojo's signature Cursed Technique?",
+    "question_type": "text",
+    "image_id": null,
+    "video_id": null,
+    "audio_id": null,
+    "time_limit_seconds": 15,
+    "points": 10,
+    "hint_text": null
+  },
+  {
+    "_order": 2,
+    "_parent_id": 1,
+    "id": "6ace9a03c96307d57c187d07",
+    "question_text": "Who is the main protagonist of Jujutsu Kaisen?",
+    "question_type": "text",
+    "image_id": null,
+    "video_id": null,
+    "audio_id": null,
+    "time_limit_seconds": 15,
+    "points": 10,
+    "hint_text": null
+  },
+  {
+    "_order": 3,
+    "_parent_id": 1,
+    "id": "6ace9a03c96307d57c187d0c",
+    "question_text": "Which cursed spirit is known as the 'King of Curses'?",
+    "question_type": "text",
+    "image_id": null,
+    "video_id": null,
+    "audio_id": null,
+    "time_limit_seconds": 15,
+    "points": 10,
+    "hint_text": null
+  }
+]

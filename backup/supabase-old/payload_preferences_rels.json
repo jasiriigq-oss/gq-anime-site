@@ -1,0 +1,51 @@
+[
+  {
+    "id": 1,
+    "order": null,
+    "parent_id": 1,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 3,
+    "order": null,
+    "parent_id": 2,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 7,
+    "order": null,
+    "parent_id": 4,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 9,
+    "order": null,
+    "parent_id": 6,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 17,
+    "order": null,
+    "parent_id": 5,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 19,
+    "order": null,
+    "parent_id": 3,
+    "path": "user",
+    "users_id": 1
+  },
+  {
+    "id": 22,
+    "order": null,
+    "parent_id": 7,
+    "path": "user",
+    "users_id": 1
+  }
+]
